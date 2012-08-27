@@ -112,7 +112,7 @@
             this.summaryOutTab.Location = new System.Drawing.Point(4, 22);
             this.summaryOutTab.Name = "summaryOutTab";
             this.summaryOutTab.Padding = new System.Windows.Forms.Padding(3);
-            this.summaryOutTab.Size = new System.Drawing.Size(372, 216);
+            this.summaryOutTab.Size = new System.Drawing.Size(402, 219);
             this.summaryOutTab.TabIndex = 1;
             this.summaryOutTab.Text = "Summary";
             this.summaryOutTab.UseVisualStyleBackColor = true;
@@ -147,10 +147,11 @@
             // 
             // httpVersionLbl
             // 
-            this.httpVersionLbl.AutoSize = true;
+            this.httpVersionLbl.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.httpVersionLbl.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.httpVersionLbl.Location = new System.Drawing.Point(49, 7);
             this.httpVersionLbl.Name = "httpVersionLbl";
-            this.httpVersionLbl.Size = new System.Drawing.Size(22, 13);
+            this.httpVersionLbl.Size = new System.Drawing.Size(161, 13);
             this.httpVersionLbl.TabIndex = 2;
             this.httpVersionLbl.Text = "1.1";
             // 
