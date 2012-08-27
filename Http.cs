@@ -48,6 +48,16 @@ Accept: text/html, application/xml;q=0.9, application/xhtml xml, image/png, imag
 Accept-Language: en
 Accept-Charset: iso-8859-1, utf-8, utf-16, *;q=0.1
 Connection: Keep-Alive";
+
+            InputTxt.KeyDown += new KeyEventHandler(InputTxt_KeyDown);
+        }
+
+        void InputTxt_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.A)
+            {
+                ((TextBox)sender).SelectAll();
+            }
         }
 
 
