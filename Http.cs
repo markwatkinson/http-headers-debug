@@ -181,7 +181,10 @@ Connection: Keep-Alive";
             string response = req.response;
             string responseHeaders;
             int index = response.IndexOf("\r\n\r\n");
-            responseHeaders = response.Substring(0, index);
+            if (index >= 0)
+                responseHeaders = response.Substring(0, index);
+            else
+                responseHeaders = response;
             OutputTxt.Text = responseHeaders;
 
             HeaderFormatter formatter = new HeaderFormatter(responseHeaders);

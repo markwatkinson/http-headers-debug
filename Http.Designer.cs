@@ -76,11 +76,10 @@
             // 
             // errorLbl
             // 
-            this.errorLbl.AutoSize = true;
             this.errorLbl.ForeColor = System.Drawing.Color.Red;
-            this.errorLbl.Location = new System.Drawing.Point(6, 225);
+            this.errorLbl.Location = new System.Drawing.Point(6, 212);
             this.errorLbl.Name = "errorLbl";
-            this.errorLbl.Size = new System.Drawing.Size(58, 13);
+            this.errorLbl.Size = new System.Drawing.Size(362, 45);
             this.errorLbl.TabIndex = 3;
             this.errorLbl.Text = "Error Label";
             // 
