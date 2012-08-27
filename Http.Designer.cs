@@ -61,6 +61,7 @@
             this.InputTxt.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.InputTxt.Size = new System.Drawing.Size(359, 177);
             this.InputTxt.TabIndex = 0;
+            this.InputTxt.WordWrap = false;
             this.InputTxt.TextChanged += new System.EventHandler(this.InputTxt_TextChanged);
             // 
             // GoBtn
@@ -192,6 +193,7 @@
             this.OutputTxt.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.OutputTxt.Size = new System.Drawing.Size(396, 213);
             this.OutputTxt.TabIndex = 1;
+            this.OutputTxt.WordWrap = false;
             // 
             // tabControl1
             // 
