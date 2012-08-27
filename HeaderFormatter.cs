@@ -97,7 +97,15 @@ namespace HTTP
 
             if (_headersDict.ContainsKey("content-type"))
             {
-                Information.Add("The returned data has a mimetype of " + _headersDict["content-type"]);
+                string contentType = _headersDict["content-type"];
+                if (contentType.ToLower().StartsWith("text/html"))
+                {
+                    Information.Add("The server returned an HTML page");
+                }
+                else
+                {
+                    Information.Add("The returned a " + contentType + " file");
+                }
             }
 
             if (_headersDict.ContainsKey("content-length"))
