@@ -64,18 +64,33 @@ namespace HTTP
         /// <returns></returns>
         private Socket GetSocket(string hostname, int port = 80)
         {
+            IPAddress ip;
+            IPAddress[] ipList;
+            // the 'fail safe' method of using the GetHostEntry method
+            // is incredibly slow sometimes, so let's avoid it if we can
+            // i.e. if the hostname is already an IP address
 
-            IPHostEntry hostEntry;
-            try
+            if (IPAddress.TryParse(hostname, out ip)) 
             {
-                hostEntry = Dns.GetHostEntry(hostname);
-            }
-            catch (Exception ex)
+                ipList = new IPAddress[] { ip };
+            } 
+            else 
             {
-                WorkerError(String.Format("DNS lookup for {0} failed", hostname));
-                return null;
+                IPHostEntry hostEntry;
+                try
+                {
+                    hostEntry = Dns.GetHostEntry(hostname);
+                }
+                catch (Exception ex)
+                {
+                    WorkerError(String.Format("DNS lookup for {0} failed", hostname));
+                    return null;
+                }
+                ipList = hostEntry.AddressList;
             }
-            foreach (IPAddress address in hostEntry.AddressList)
+
+
+            foreach (IPAddress address in ipList)
             {
                 IPEndPoint endPoint = null;
                 Socket s = null;
