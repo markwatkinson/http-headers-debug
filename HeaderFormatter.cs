@@ -71,7 +71,7 @@ namespace HTTP
 
         private void ParseOk()
         {
-            if (StatusCode == 206)
+            if (StatusCode == 206 && _headersDict.ContainsKey("content-range"))
             {
                 string range = _headersDict["content-range"];
                 string type = null;

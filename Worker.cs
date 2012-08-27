@@ -153,6 +153,13 @@ namespace HTTP
             s.Send(send, send.Length, 0);
             int numBytes = 0;
             string response = "";
+
+
+            // XXX: this might be a bug,
+            // we check for numbytes > 0, but can a server send a message to say
+            // 'no more data'? if so, then we loop infinitely (user can interrupt though)
+            // If we check for numBytes == receve.Length then this can interrupt too
+            // soon if the server doesn't send it all at once (example - Werkzeug)
             do
             {
                 if (CheckCancel())
@@ -168,7 +175,7 @@ namespace HTTP
                     WorkerError("Socket exception: " + ex.Message);
                 }
                 response += Encoding.ASCII.GetString(receive, 0, numBytes);
-            } while (numBytes == receive.Length);
+            } while (numBytes > 0);
             return response;
         }
     }
