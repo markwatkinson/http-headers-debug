@@ -18,6 +18,7 @@ namespace HTTP
         public string headers;
         public string response;
 
+        private bool errored = false;
         /// <summary>
         /// A set of errors encountered by the worker
         /// </summary>
@@ -36,6 +37,7 @@ namespace HTTP
         public void WorkerError(string message)
         {
             errors.Add(message);
+            errored = true;
         }
 
         /// <summary>
@@ -75,9 +77,21 @@ namespace HTTP
             }
             foreach (IPAddress address in hostEntry.AddressList)
             {
-                IPEndPoint endPoint = new IPEndPoint(address, port);
-                Socket s = new Socket(endPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                IPEndPoint endPoint = null;
+                Socket s = null;
 
+                try
+                {
+                   endPoint = new IPEndPoint(address, port);
+                   
+                }
+                catch (Exception exc)
+                {
+                    WorkerError(String.Format("Failed to get endpoint for {0}:{1}, " +
+                        "is this a valid address/port?", address, port));
+                    return null;
+                }
+                s = new Socket(endPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
                 IAsyncResult result = s.BeginConnect(endPoint, null, null);
                 // split this up so we can check for cancellations without hanging
                 // until the timeout hits
@@ -115,7 +129,8 @@ namespace HTTP
             Socket s = GetSocket(hostname, port);
             if (s == null)
             {
-                WorkerError(String.Format("Socket connection failed to {0}:{1}", hostname, port));
+                if (!errored)
+                    WorkerError(String.Format("Socket connection failed to {0}:{1}", hostname, port));
                 return null;
             }
             Byte[] send, receive = new Byte[1024 * 100];
