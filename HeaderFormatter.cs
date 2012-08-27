@@ -114,6 +114,22 @@ namespace HTTP
             }
         }
 
+        private void ParseError()
+        {
+            string type = null;
+            string err = "This request created an error. ";
+
+            if (StatusCode >= 400 && StatusCode < 500)
+            {
+                err += "This is a client error - your request was invalid or disallowed.";
+            }
+            else if (StatusCode >= 500)
+            {
+                err += "This is a server error - your request may have been valid but the server failed to handle it";
+            }
+            Information.Add(err);
+        }
+
         public void Parse()
         {
 
@@ -126,7 +142,7 @@ namespace HTTP
 
             if (IsRedirect) ParseRedirect();
             if (IsOk) ParseOk();
-
+            if (IsError) ParseError();
         }
     }
 }
