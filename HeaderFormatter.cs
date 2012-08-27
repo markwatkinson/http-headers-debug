@@ -104,7 +104,7 @@ namespace HTTP
                 }
                 else
                 {
-                    Information.Add("The returned a " + contentType + " file");
+                    Information.Add("The server returned a " + contentType + " file");
                 }
             }
 
