@@ -159,9 +159,15 @@ namespace HTTP
             // we check for numbytes > 0, but can a server send a message to say
             // 'no more data'? if so, then we loop infinitely (user can interrupt though)
             // If we check for numBytes == receve.Length then this can interrupt too
-            // soon if the server doesn't send it all at once (example - Werkzeug)
+            // soon if the server doesn't send it all at once (example - Werkzeug).
+            // As all we're interested in right now is the headers, we'll break after
+            // we've received them so we don't need to worry about the body.
+            // In future we might need to parse the headers and grab the content length
+            // and check for chunked encoding
+            bool recvHeaders = false;
             do
             {
+                string r;
                 if (CheckCancel())
                 {
                     break;
@@ -173,9 +179,12 @@ namespace HTTP
                 catch (Exception ex)
                 {
                     WorkerError("Socket exception: " + ex.Message);
+                    break;
                 }
-                response += Encoding.ASCII.GetString(receive, 0, numBytes);
-            } while (numBytes > 0);
+                r = Encoding.ASCII.GetString(receive, 0, numBytes);
+                response += r;
+                recvHeaders = response.IndexOf("\r\n\r\n") >= 0;
+            } while (numBytes > 0 && !recvHeaders);
             return response;
         }
     }
