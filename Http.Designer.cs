@@ -45,12 +45,14 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.summaryOutTab.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.rawOutTab.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // InputTxt
@@ -76,10 +78,11 @@
             // 
             // errorLbl
             // 
+            this.errorLbl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.errorLbl.ForeColor = System.Drawing.Color.Red;
-            this.errorLbl.Location = new System.Drawing.Point(6, 212);
+            this.errorLbl.Location = new System.Drawing.Point(0, 0);
             this.errorLbl.Name = "errorLbl";
-            this.errorLbl.Size = new System.Drawing.Size(362, 45);
+            this.errorLbl.Size = new System.Drawing.Size(359, 38);
             this.errorLbl.TabIndex = 3;
             this.errorLbl.Text = "Error Label";
             // 
@@ -208,10 +211,10 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.panel1);
             this.groupBox2.Controls.Add(this.hostLbl);
             this.groupBox2.Controls.Add(this.InputTxt);
             this.groupBox2.Controls.Add(this.label1);
-            this.groupBox2.Controls.Add(this.errorLbl);
             this.groupBox2.Location = new System.Drawing.Point(12, 12);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(386, 261);
@@ -228,6 +231,15 @@
             this.groupBox3.TabIndex = 8;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Response";
+            // 
+            // panel1
+            // 
+            this.panel1.AutoScroll = true;
+            this.panel1.Controls.Add(this.errorLbl);
+            this.panel1.Location = new System.Drawing.Point(9, 216);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(359, 38);
+            this.panel1.TabIndex = 6;
             // 
             // Http
             // 
@@ -248,6 +260,7 @@
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -271,6 +284,7 @@
         private System.Windows.Forms.Label otherInformationLbl;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Panel panel1;
     }
 }
 
