@@ -81,7 +81,7 @@ namespace HTTP
                 {
                     hostEntry = Dns.GetHostEntry(hostname);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     WorkerError(String.Format("DNS lookup for {0} failed", hostname));
                     return null;
@@ -100,7 +100,7 @@ namespace HTTP
                    endPoint = new IPEndPoint(address, port);
                    
                 }
-                catch (Exception exc)
+                catch (Exception)
                 {
                     WorkerError(String.Format("Failed to get endpoint for {0}:{1}, " +
                         "is this a valid address/port?", address, port));

@@ -92,7 +92,7 @@ Connection: Keep-Alive";
                 {
                     port = System.Convert.ToInt32(hostMatch.Groups[3].Value);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                 }
             }

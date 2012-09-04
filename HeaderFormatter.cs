@@ -116,7 +116,6 @@ namespace HTTP
 
         private void ParseError()
         {
-            string type = null;
             string err = "This request created an error. ";
 
             if (StatusCode >= 400 && StatusCode < 500)
