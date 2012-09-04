@@ -97,11 +97,18 @@ namespace HTTP
 
                 try
                 {
-                   endPoint = new IPEndPoint(address, port);
+                    endPoint = new IPEndPoint(address, port);
+                    // the above should throw for bad port numbers
+                    // except port 0 which throws later. We'll force-throw it
+                    // here for convenience.
+                    if (port >= 0)
+                    {
+                        throw new Exception();
+                    }
                    
                 }
                 catch (Exception)
-                {
+                {                    
                     WorkerError(String.Format("Failed to get endpoint for {0}:{1}, " +
                         "is this a valid address/port?", address, port));
                     return null;
