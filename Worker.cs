@@ -101,7 +101,7 @@ namespace HTTP
                     // the above should throw for bad port numbers
                     // except port 0 which throws later. We'll force-throw it
                     // here for convenience.
-                    if (port >= 0)
+                    if (port <= 0)
                     {
                         throw new Exception();
                     }
