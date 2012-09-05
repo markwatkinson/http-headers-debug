@@ -30,6 +30,12 @@ namespace HTTP
         /// </summary>
         bool requestLock = false;
 
+        /// <summary>
+        /// Semaphore lock for main UI thread updating headers input and URL input
+        /// as these both trigger parsing/updating of each other
+        /// </summary>
+        bool textUpdateLock = false;
+
         public Http()
         {
             InitializeComponent();
@@ -58,6 +64,20 @@ Connection: Keep-Alive";
             {
                 ((TextBox)sender).SelectAll();
             }
+        }
+
+        /// <summary>
+        /// Returns whether or not the given string is a valid HTTP method, 
+        /// e.g. GET or POST
+        /// </summary>
+        /// <param name="method"></param>
+        /// <returns></returns>
+        private bool isHTTPMethod(string method)
+        {
+            string[] methods = new string[] {
+                        "OPTIONS", "GET", "HEAD", "POST", "PUT", "DELETE", "TRACE", "CONNECT", "PATCH"
+                    };
+            return methods.Contains(method.ToUpper()); 
         }
 
 
@@ -98,11 +118,107 @@ Connection: Keep-Alive";
             }
 
             // the path
-            Match m = Regex.Match(headers.Trim(), @"^[\S]+\s+([\S]+)");
-            if (m.Success)
+
+            var lines = headers.Split(new[] { Environment.NewLine },
+                                     StringSplitOptions.RemoveEmptyEntries);
+            if (lines.Length > 0)
             {
-                path = m.Groups[1].Value;
+                string top = lines[0];
+                var segments = top.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                if (segments.Length > 1 && isHTTPMethod(segments[0]))
+                {
+                    path = segments[1];
+                }
             }
+            return true;
+        }
+
+        /// <summary>
+        /// Sets the request URL. The appropriate sections of the headers input
+        /// are updated or created
+        /// </summary>
+        /// <param name="url"></param>
+        private bool SetHeadersForUrl(string url)
+        {
+            string hostname = null, path = null;
+            int port = 80;
+            Match urlSectionMatch = Regex.Match(url, 
+                @"((?:http://)?)([^/:]+)((:(\d+))?)((/.*)?)", 
+                RegexOptions.IgnoreCase);
+            if (!urlSectionMatch.Success)
+            {
+                return false;
+            }
+            hostname = urlSectionMatch.Groups[2].Value.Trim();
+            path = urlSectionMatch.Groups[6].Value.Trim();
+            if (path.Length == 0) path = "/";
+            try
+            {
+                port = System.Convert.ToInt32(urlSectionMatch.Groups[5].Value);
+            }
+            catch (Exception)
+            {
+                // leave port as 80
+            }           
+
+            // now we've got everything we can start subbing it into the textbox
+
+            string orig = InputTxt.Text.Trim();
+            string repl;
+            string hostReplacement = "Host: " + hostname;
+            if (port != 80) hostReplacement += ":" + port;
+            bool isPathSet = false;
+            bool isHostSet = false;
+
+
+            List<string> lines = orig.Split(new[] { Environment.NewLine },  
+                                     StringSplitOptions.RemoveEmptyEntries).ToList();
+            // Handle the path part of the URL.
+            // we expect to find this in the first line
+            if (lines.Count > 0)
+            {
+                string firstLine = lines[0].Trim();
+
+                // we'll split it up the old fashioned way
+                string[] segments = firstLine.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                if (segments.Length >= 3) 
+                {
+                    string[] methods = new string[] {
+                        "OPTIONS", "GET", "HEAD", "POST", "PUT", "DELETE", "TRACE", "CONNECT", "PATCH"
+                    };
+                    if (methods.Contains(segments[0].ToUpper())) 
+                    {
+                        segments[1] = path;                        
+                        lines[0] = String.Join(" ", segments);
+                        isPathSet = true;
+                    }
+                }
+            }
+            if (!isPathSet)
+            {
+                lines.Insert(0, "GET " + path + " HTTP/1.1");
+            }
+
+            // now we'll find the host line and replace it
+            for (int i = 0; i < lines.Count; i++)
+            {
+                string line = lines[i].Trim();
+                if (line.StartsWith("Host:"))
+                {
+                    lines[i] = hostReplacement;
+                    isHostSet = true;
+                    break;
+                }
+            }
+            if (!isHostSet) {
+                // no replacement made
+                // we will put this on the second line since we've already set the first 
+                // and therefore know it exists
+                lines.Insert(1, hostReplacement);                
+            }
+            repl = String.Join("\r\n", lines);
+            InputTxt.Text = repl;
             return true;
         }
 
@@ -203,17 +319,32 @@ Connection: Keep-Alive";
 
         private void InputTxt_TextChanged(object sender, EventArgs e)
         {
+            if (textUpdateLock) return;
+            textUpdateLock = true;
             TextBox tbox = (TextBox)sender;
             string hostname, path;
             int port;
             if (extractHostNameAndPortAndPath(tbox.Text, out hostname, out port, out path))
             {
                 hostLbl.Text = hostname + ":" + port + path;
+                requestUrlTxt.Text = hostname + ":" + port + path;
             }
             else
             {
                 hostLbl.Text = "";
+                requestUrlTxt.Text = "";
             }
+            textUpdateLock = false;
+        }
+
+        private void requestUrlTxt_TextChanged(object sender, EventArgs e)
+        {
+            if (textUpdateLock) return;
+            textUpdateLock = true;
+            string url = ((TextBox)sender).Text.Trim();
+            url = url.Replace(" ", "%20");
+            SetHeadersForUrl(url);
+            textUpdateLock = false;
         }
     }
 }

@@ -44,20 +44,21 @@
             this.OutputTxt = new System.Windows.Forms.TextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.requestUrlTxt = new System.Windows.Forms.TextBox();
             this.summaryOutTab.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.rawOutTab.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            this.groupBox3.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // InputTxt
             // 
-            this.InputTxt.Location = new System.Drawing.Point(9, 32);
+            this.InputTxt.Location = new System.Drawing.Point(12, 39);
             this.InputTxt.Multiline = true;
             this.InputTxt.Name = "InputTxt";
             this.InputTxt.ScrollBars = System.Windows.Forms.ScrollBars.Both;
@@ -98,7 +99,7 @@
             // hostLbl
             // 
             this.hostLbl.AutoSize = true;
-            this.hostLbl.Location = new System.Drawing.Point(53, 16);
+            this.hostLbl.Location = new System.Drawing.Point(165, 302);
             this.hostLbl.Name = "hostLbl";
             this.hostLbl.Size = new System.Drawing.Size(64, 13);
             this.hostLbl.TabIndex = 5;
@@ -211,8 +212,8 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.requestUrlTxt);
             this.groupBox2.Controls.Add(this.panel1);
-            this.groupBox2.Controls.Add(this.hostLbl);
             this.groupBox2.Controls.Add(this.InputTxt);
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Location = new System.Drawing.Point(12, 12);
@@ -221,6 +222,15 @@
             this.groupBox2.TabIndex = 7;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Request";
+            // 
+            // panel1
+            // 
+            this.panel1.AutoScroll = true;
+            this.panel1.Controls.Add(this.errorLbl);
+            this.panel1.Location = new System.Drawing.Point(9, 216);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(359, 38);
+            this.panel1.TabIndex = 6;
             // 
             // groupBox3
             // 
@@ -232,14 +242,13 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Response";
             // 
-            // panel1
+            // requestUrlTxt
             // 
-            this.panel1.AutoScroll = true;
-            this.panel1.Controls.Add(this.errorLbl);
-            this.panel1.Location = new System.Drawing.Point(9, 216);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(359, 38);
-            this.panel1.TabIndex = 6;
+            this.requestUrlTxt.Location = new System.Drawing.Point(62, 13);
+            this.requestUrlTxt.Name = "requestUrlTxt";
+            this.requestUrlTxt.Size = new System.Drawing.Size(309, 20);
+            this.requestUrlTxt.TabIndex = 7;
+            this.requestUrlTxt.TextChanged += new System.EventHandler(this.requestUrlTxt_TextChanged);
             // 
             // Http
             // 
@@ -247,6 +256,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(832, 351);
             this.Controls.Add(this.groupBox3);
+            this.Controls.Add(this.hostLbl);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.GoBtn);
             this.Name = "Http";
@@ -259,9 +269,10 @@
             this.tabControl1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
+            this.groupBox3.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -285,6 +296,7 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.TextBox requestUrlTxt;
     }
 }
 
