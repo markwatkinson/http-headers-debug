@@ -105,7 +105,13 @@ Connection: Keep-Alive";
             int gLen = hostMatch.Groups.Count;
           
             hostname = hostMatch.Groups[1].Value.Trim();
-            // if we fail to convert the port we can just break and leave it as 80
+
+            // https default port is 443
+            if (hostname.ToLower().StartsWith("https"))
+            {
+                port = 443;
+            }
+            // if we fail to convert the port we can just break and leave it as 80/443
             if (gLen > 2)
             {
                 try
@@ -142,12 +148,18 @@ Connection: Keep-Alive";
         {
             string hostname = null, path = null;
             int port = 80;
+            bool https = false;
             Match urlSectionMatch = Regex.Match(url, 
-                @"((?:http://)?)([^/:]+)((:(\d+))?)((/.*)?)", 
+                @"((?:https?://)?)([^/:]+)((:(\d+))?)((/.*)?)", 
                 RegexOptions.IgnoreCase);
             if (!urlSectionMatch.Success)
             {
                 return false;
+            }
+            if (urlSectionMatch.Groups[1].Value.ToLower().StartsWith("https"))
+            {
+                port = 443;
+                https = true;
             }
             hostname = urlSectionMatch.Groups[2].Value.Trim();
             path = urlSectionMatch.Groups[6].Value.Trim();
@@ -158,7 +170,7 @@ Connection: Keep-Alive";
             }
             catch (Exception)
             {
-                // leave port as 80
+                // leave port as 80/443
             }           
 
             // now we've got everything we can start subbing it into the textbox
@@ -189,7 +201,12 @@ Connection: Keep-Alive";
                     };
                     if (methods.Contains(segments[0].ToUpper())) 
                     {
-                        segments[1] = path;                        
+                        segments[1] = path;
+                        int lastSegmentIndex = segments.Length - 1;
+                        if (https && lines[lastSegmentIndex].IndexOf("HTTPS") < 0)
+                        {
+                            lines[lastSegmentIndex] = lines[lastSegmentIndex].Replace("HTTP", "HTTPS");
+                        }
                         lines[0] = String.Join(" ", segments);
                         isPathSet = true;
                     }
@@ -197,7 +214,7 @@ Connection: Keep-Alive";
             }
             if (!isPathSet)
             {
-                lines.Insert(0, "GET " + path + " HTTP/1.1");
+                lines.Insert(0, "GET " + path + " HTTP" + (https? "S" : "") + "/1.1");
             }
 
             // now we'll find the host line and replace it
